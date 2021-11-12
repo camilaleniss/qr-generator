@@ -5,3 +5,7 @@ type QRRegister struct {
 	TextValue string `json:"text_value"`
 	EncodedQR string `json:"encoded_qr"`
 }
+
+type ErrorResponse struct {
+	Error string `json:"error"`
+}

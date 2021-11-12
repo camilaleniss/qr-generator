@@ -8,7 +8,7 @@ import (
 
 // GetConnection get a connection to the mysql database
 func GetConnection() *sql.DB {
-	db, err := sql.Open("mysql", "root:@tcp(localhost:3306)/QR_CODE_SYSTEM")
+	db, err := sql.Open("mysql", "myuser:password@tcp(localhost:3306)/QR_CODE_SYSTEM")
 	if err != nil {
 		panic(err.Error())
 	}

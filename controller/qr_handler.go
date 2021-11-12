@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/camilaleniss/qr-generator/models"
+	"github.com/camilaleniss/qr-generator/util"
 )
 
 // respondwithJSON write json response format
@@ -19,15 +20,22 @@ func respondwithJSON(w http.ResponseWriter, code int, payload interface{}) {
 	w.WriteHeader(code)
 
 	_, err = w.Write(response)
-	log.Fatal(err)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 func GetQRs(w http.ResponseWriter, r *http.Request) {
-	respondwithJSON(w, http.StatusOK, models.QRRegister{
-		ID:        "the id",
-		TextValue: "the text value",
-		EncodedQR: "the encoded qr",
-	})
+	db := util.GetConnection()
+
+	defer db.Close()
+
+	qrCodes, err := util.SelectAllQRs(db)
+	if err != nil {
+		respondwithJSON(w, http.StatusInternalServerError, models.ErrorResponse{Error: err.Error()})
+	}
+
+	respondwithJSON(w, http.StatusOK, qrCodes)
 }
 
 func GetQR(w http.ResponseWriter, r *http.Request) {
