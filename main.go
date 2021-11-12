@@ -1,13 +1,22 @@
 package main
 
 import (
+	"database/sql"
 	"net/http"
 
 	"github.com/camilaleniss/qr-generator/controller"
 	"github.com/gorilla/mux"
+
+	_ "github.com/go-sql-driver/mysql"
 )
 
 func main() {
+	db, err := sql.Open("mysql", "root:@tcp(localhost:3306)/QR_CODE_SYSTEM")
+	if err != nil {
+		panic(err.Error())
+	}
+	defer db.Close()
+
 	router := mux.NewRouter()
 
 	router.HandleFunc("/qrcodes", controller.GetQRs).Methods("GET")
