@@ -54,3 +54,11 @@ func DeleteQR(w http.ResponseWriter, r *http.Request) {
 		EncodedQR: "the encoded qr",
 	})
 }
+
+func GetHealth(w http.ResponseWriter, r *http.Request) {
+	respondwithJSON(w, http.StatusOK, models.QRRegister{
+		ID:        "ESTAMOS MELOS",
+		TextValue: "the text value",
+		EncodedQR: "the encoded qr",
+	})
+}
