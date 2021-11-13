@@ -2,6 +2,7 @@ package util
 
 import (
 	"database/sql"
+	"errors"
 	"fmt"
 
 	"github.com/camilaleniss/qr-generator/models"
@@ -21,6 +22,10 @@ const (
 	DELETEBYIDQUERY = "DELETE FROM %s WHERE id=?;"
 
 	UPDATEBYIDQUERY = "UPDATE %s SET text_value=?, encoded_qr=? WHERE id=?;"
+)
+
+var (
+	ErrNotFoundRegister = errors.New("not found register in table")
 )
 
 // SelectALLQRs gets all the QR Registers in table
@@ -101,9 +106,18 @@ func UpdateQRRegister(db *sql.DB, id int, textValue, encodedQR string) error {
 		return err
 	}
 
-	_, err = query.Exec(textValue, encodedQR, id)
+	result, err := query.Exec(textValue, encodedQR, id)
 	if err != nil {
 		return err
+	}
+
+	count, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if int(count) == 0 {
+		return ErrNotFoundRegister
 	}
 
 	return nil
@@ -118,9 +132,18 @@ func DeleteQRRegister(db *sql.DB, id int) error {
 		return err
 	}
 
-	_, err = query.Exec(id)
+	result, err := query.Exec(id)
 	if err != nil {
 		return err
+	}
+
+	count, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if int(count) == 0 {
+		return ErrNotFoundRegister
 	}
 
 	return nil

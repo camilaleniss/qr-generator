@@ -111,25 +111,112 @@ func CreateQR(w http.ResponseWriter, r *http.Request) {
 }
 
 func UpdateQR(w http.ResponseWriter, r *http.Request) {
-	respondwithJSON(w, http.StatusOK, models.QRRegister{
-		ID:        "I'M THE UPDATE QR",
-		TextValue: "the text value",
-		EncodedQR: "the encoded qr",
+	idString := mux.Vars(r)["id"]
+	id, err := strconv.Atoi(idString)
+	if err != nil {
+		respondwithJSON(w, http.StatusInternalServerError, models.ErrorResponse{Error: err.Error()})
+
+		return
+	}
+
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		respondwithJSON(w, http.StatusInternalServerError, models.ErrorResponse{Error: err.Error()})
+
+		return
+	}
+
+	keyVal := make(map[string]string)
+
+	err = json.Unmarshal(body, &keyVal)
+	if err != nil {
+		respondwithJSON(w, http.StatusInternalServerError, models.ErrorResponse{Error: err.Error()})
+
+		return
+	}
+
+	textValue := keyVal["text_value"]
+
+	encodedQR, err := util.GetBase64QRCode(textValue)
+	if err != nil {
+		respondwithJSON(w, http.StatusInternalServerError, models.ErrorResponse{Error: err.Error()})
+
+		return
+	}
+
+	db := util.GetConnection()
+
+	defer db.Close()
+
+	err = util.UpdateQRRegister(db, id, textValue, encodedQR)
+	if err == util.ErrNotFoundRegister {
+		respondwithJSON(w, http.StatusNotFound, models.ErrorResponse{Error: err.Error()})
+
+		return
+	}
+
+	if err != nil {
+		respondwithJSON(w, http.StatusInternalServerError, models.ErrorResponse{Error: err.Error()})
+
+		return
+	}
+
+	respondwithJSON(w, http.StatusOK, map[string]string{
+		"Status": "Updated",
+		"ID":     fmt.Sprintf("%d", id),
 	})
 }
 
 func DeleteQR(w http.ResponseWriter, r *http.Request) {
-	respondwithJSON(w, http.StatusOK, models.QRRegister{
-		ID:        "I'M THE DELETE QR",
-		TextValue: "the text value",
-		EncodedQR: "the encoded qr",
+	idString := mux.Vars(r)["id"]
+	id, err := strconv.Atoi(idString)
+	if err != nil {
+		respondwithJSON(w, http.StatusInternalServerError, models.ErrorResponse{Error: err.Error()})
+
+		return
+	}
+
+	db := util.GetConnection()
+
+	defer db.Close()
+
+	err = util.DeleteQRRegister(db, id)
+	if err == util.ErrNotFoundRegister {
+		respondwithJSON(w, http.StatusNotFound, models.ErrorResponse{Error: err.Error()})
+
+		return
+	}
+
+	if err != nil {
+		respondwithJSON(w, http.StatusInternalServerError, models.ErrorResponse{Error: err.Error()})
+
+		return
+	}
+
+	respondwithJSON(w, http.StatusOK, map[string]string{
+		"Status": "Deleted",
+		"ID":     fmt.Sprintf("%d", id),
 	})
 }
 
 func GetHealth(w http.ResponseWriter, r *http.Request) {
-	respondwithJSON(w, http.StatusOK, models.QRRegister{
-		ID:        "ESTAMOS MELOS",
-		TextValue: "the text value",
-		EncodedQR: "the encoded qr",
+	db := util.GetConnection()
+
+	defer db.Close()
+
+	qrCodes, err := util.SelectAllQRs(db)
+	if err != nil {
+		respondwithJSON(w, http.StatusInternalServerError,
+			map[string]string{
+				"BD Connection":  "Major Outage",
+				"Error Response": err.Error(),
+			})
+
+		return
+	}
+
+	respondwithJSON(w, http.StatusOK, map[string]string{
+		"BD Connection":  "Running",
+		"QR Codes Saved": fmt.Sprintf("%d", len(qrCodes)),
 	})
 }
