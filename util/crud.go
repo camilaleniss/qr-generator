@@ -74,20 +74,22 @@ func SelectQRByID(db *sql.DB, id int) (models.QRRegister, error) {
 }
 
 // CreateQRRegister inserts a new QR register in the qrcodes table
-func CreateQRRegister(db *sql.DB, textValue, encodedQR string) error {
+func CreateQRRegister(db *sql.DB, textValue, encodedQR string) (int, error) {
 	queryString := fmt.Sprintf(INSERTQUERY, QRTABLE)
 
 	query, err := db.Prepare(queryString)
 	if err != nil {
-		return err
+		return 0, err
 	}
 
-	_, err = query.Exec(textValue, encodedQR)
+	response, err := query.Exec(textValue, encodedQR)
 	if err != nil {
-		return err
+		return 0, err
 	}
 
-	return nil
+	id, err := response.LastInsertId()
+
+	return int(id), err
 }
 
 // UpdateQRRegister updates a QR Register values with a given id
