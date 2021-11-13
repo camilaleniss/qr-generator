@@ -58,6 +58,12 @@ func GetQR(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 
 	qrCode, err := util.SelectQRByID(db, id)
+	if err == util.ErrNotFoundRegister {
+		respondwithJSON(w, http.StatusNotFound, models.ErrorResponse{Error: err.Error()})
+
+		return
+	}
+
 	if err != nil {
 		respondwithJSON(w, http.StatusInternalServerError, models.ErrorResponse{Error: err.Error()})
 

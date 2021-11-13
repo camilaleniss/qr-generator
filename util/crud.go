@@ -73,9 +73,11 @@ func SelectQRByID(db *sql.DB, id int) (models.QRRegister, error) {
 		if err != nil {
 			return models.QRRegister{}, err
 		}
+
+		return qrRegister, nil
 	}
 
-	return qrRegister, nil
+	return models.QRRegister{}, ErrNotFoundRegister
 }
 
 // CreateQRRegister inserts a new QR register in the qrcodes table
