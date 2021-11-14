@@ -8,8 +8,8 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/camilaleniss/qr-generator/models"
-	"github.com/camilaleniss/qr-generator/util"
+	"github.com/camilaleniss/qr-generator/app/models"
+	"github.com/camilaleniss/qr-generator/app/util"
 	"github.com/gorilla/mux"
 )
 

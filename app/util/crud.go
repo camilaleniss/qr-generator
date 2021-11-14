@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/camilaleniss/qr-generator/models"
+	"github.com/camilaleniss/qr-generator/app/models"
 )
 
 const (

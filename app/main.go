@@ -3,7 +3,7 @@ package main
 import (
 	"net/http"
 
-	"github.com/camilaleniss/qr-generator/controller"
+	"github.com/camilaleniss/qr-generator/app/controller"
 	"github.com/gorilla/mux"
 )
 
