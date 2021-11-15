@@ -25,3 +25,9 @@ services:
       - "8080:8080"
     mem_limit: 500M
     cpus: 1
+
+  proxy:
+    build: ./reverse-proxy
+    ports:
+      - "80:80"
+      - "443:443"
