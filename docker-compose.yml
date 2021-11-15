@@ -1,4 +1,4 @@
-version: '2'
+version: '3.8'
 services:
   
   mysql:
@@ -15,9 +15,13 @@ services:
     volumes:
       - ./database/sqls:/docker-entrypoint-initdb.d
       - ./database/data:/var/lib/mysql
+    mem_limit: 500M
+    cpus: 1
 
   web: 
     build: ./app
     command: go run main.go
     ports:
       - "8080:8080"
+    mem_limit: 500M
+    cpus: 1
