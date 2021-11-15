@@ -21,8 +21,6 @@ services:
   web: 
     build: ./app
     command: go run main.go
-    ports:
-      - "8080:8080"
     mem_limit: 500M
     cpus: 1
 
