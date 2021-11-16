@@ -3,6 +3,7 @@ services:
   
   mysql:
     build: ./database
+    image: camilaleniss/mysql
     ports:
      - "3306:3306"
     restart: always
@@ -20,11 +21,13 @@ services:
 
   web: 
     build: ./app
+    image: camilaleniss/web
     command: go run main.go
     mem_limit: 500M
     cpus: 1
 
   proxy:
+    image: camilaleniss/proxy
     build: ./reverse-proxy
     ports:
       - "80:80"
