@@ -99,7 +99,7 @@ It must returns this
 
 This is an app to generate and manage QR codes from a text. The API is build in Golang and it's connected to a MySQL database. With the run of the Docker Compose the application will upload the following architecture:
 
-![docker (1).png](QR%20Code%20Generator%20e621196341ab40a79d26f6686320f2ea/docker_(1).png)
+![docker (1).png](assets/docker_(1).png)
 
 Where you can see there are three Docker containers: One that works as a reverse proxy, the API container and the database. 
 
