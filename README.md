@@ -101,7 +101,7 @@ This is an app to generate and manage QR codes from a text. The API is build in 
 
 ![docker (1).png](QR%20Code%20Generator%20e621196341ab40a79d26f6686320f2ea/docker_(1).png)
 
-Where you can see there are three containers: One that works as a reverse proxy, the API container and the database. 
+Where you can see there are three Docker containers: One that works as a reverse proxy, the API container and the database. 
 
 ## Docker Images
 
@@ -111,12 +111,14 @@ Where you can see there are three containers: One that works as a reverse proxy,
 
 [For the Database](https://hub.docker.com/r/camilaleniss/mysql)
 
+You can see the Dockerfile inside each folder in this repo. 
+
 # Next steps
 
 ## Production deploy
 
-- It's neccessary to have a domain where the app can live and update that in the system
-- To don't have the error of the certificate we must purchase one
+- To run this service in a production environment, we must deploy the containers in a Cloud service. We could use a service like AWS ECS to run Docker containers.
+- To be able to connect with the service, the container nginx container must have a public IP.  To access to it easier, we could use a DNS service to give it a domain name.
 
 ## Improvements
 
